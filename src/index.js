@@ -80,14 +80,11 @@ async function getTheElementFromAPI() {
 }
 
 async function displayFirstNews() {
-  let divTitle = document.createElement("div");
-  divTitle.setAttribute("class", "title-wrap");
+  const divTitle = document.createElement("div");
+  const divUrl = document.createElement("div");
+  const divData = document.createElement("div");
 
-  let divUrl = document.createElement("div");
-  divUrl.setAttribute("class", "url-wrap");
-
-  let divData = document.createElement("div");
-  divData.setAttribute("class", "data-wrap");
+  setTheAttributeOfFatherElements(divTitle, divUrl, divData);
 
   for (start; start < limit; start++) {
     const response = await fetch(
@@ -95,16 +92,16 @@ async function displayFirstNews() {
     );
     const data = await response.json();
 
-    let title = document.createElement("p");
+    const title = document.createElement("p");
     title.innerHTML = data.title;
     divTitle.appendChild(title);
 
-    let subLinkUrl = document.createElement("div");
+    const subLinkUrl = document.createElement("div");
     subLinkUrl.setAttribute("class", "sub-url");
-    let linkUrl = document.createElement("a");
-    linkUrl.setAttribute("href", data.url);
-    linkUrl.setAttribute("class", "btn-url");
-    linkUrl.textContent = "Go to page!";
+
+    const linkUrl = document.createElement("a");
+    setTheAElement(linkUrl, data);
+
     subLinkUrl.appendChild(linkUrl);
     divUrl.appendChild(subLinkUrl);
 
@@ -115,7 +112,7 @@ async function displayFirstNews() {
       time.getHours(time) +
       ":" +
       time.getMinutes(time);
-    let timeText = document.createElement("p");
+    const timeText = document.createElement("p");
     timeText.innerHTML = time;
     divData.appendChild(timeText);
   }
@@ -135,14 +132,11 @@ btnLoad.addEventListener("click", async function displayOtherNews() {
 
   pageCreateFromTheUser++;
 
-  let divTitle = document.createElement("div");
-  divTitle.setAttribute("class", "title-wrap");
+  const divTitle = document.createElement("div");
+  const divUrl = document.createElement("div");
+  const divData = document.createElement("div");
 
-  let divUrl = document.createElement("div");
-  divUrl.setAttribute("class", "url-wrap");
-
-  let divData = document.createElement("div");
-  divData.setAttribute("class", "data-wrap");
+  setTheAttributeOfFatherElements(divTitle, divUrl, divData);
 
   for (start; start < limit; start++) {
     const response = await fetch(
@@ -150,16 +144,16 @@ btnLoad.addEventListener("click", async function displayOtherNews() {
     );
     const data = await response.json();
 
-    let title = document.createElement("p");
+    const title = document.createElement("p");
     title.innerHTML = data.title;
     divTitle.appendChild(title);
 
-    let subLinkUrl = document.createElement("div");
+    const subLinkUrl = document.createElement("div");
     subLinkUrl.setAttribute("class", "sub-url");
-    let linkUrl = document.createElement("a");
-    linkUrl.setAttribute("href", data.url);
-    linkUrl.setAttribute("class", "btn-url");
-    linkUrl.textContent = "Go to page!";
+
+    const linkUrl = document.createElement("a");
+    setTheAElement(linkUrl, data);
+
     subLinkUrl.appendChild(linkUrl);
     divUrl.appendChild(subLinkUrl);
 
@@ -170,7 +164,7 @@ btnLoad.addEventListener("click", async function displayOtherNews() {
       time.getHours(time) +
       ":" +
       time.getMinutes(time);
-    let timeText = document.createElement("p");
+    const timeText = document.createElement("p");
     timeText.innerHTML = time;
     divData.appendChild(timeText);
 
@@ -184,3 +178,17 @@ btnLoad.addEventListener("click", async function displayOtherNews() {
   moveThePage(++numPage);
   displayBtns();
 });
+
+//IT SET THE ATTRIBUTES OF THE FATHER ELEMENTS
+function setTheAttributeOfFatherElements(divTitle, divUrl, divData) {
+  divTitle.setAttribute("class", "title-wrap");
+  divUrl.setAttribute("class", "url-wrap");
+  divData.setAttribute("class", "data-wrap");
+}
+
+//IT SET THE ATTRIBUTES OF <A> ELEMENT
+async function setTheAElement(a, data) {
+  a.setAttribute("href", data.url);
+  a.setAttribute("class", "btn-url");
+  a.textContent = "Go to page!";
+}
