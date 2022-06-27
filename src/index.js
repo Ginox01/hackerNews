@@ -70,13 +70,17 @@ let limit = 5;
 
 getTheElementFromAPI();
 async function getTheElementFromAPI() {
-  const response = await fetch(allTheNewsURL);
-  const data = await response.json();
+  try {
+    const response = await fetch(allTheNewsURL);
+    const data = await response.json();
 
-  data.forEach((id) => {
-    allTheIDOfTheStories.push(id);
-  });
-  displayFirstNews();
+    data.forEach((id) => {
+      allTheIDOfTheStories.push(id);
+    });
+    displayFirstNews();
+  } catch {
+    displayErrorMessage();
+  }
 }
 
 async function displayFirstNews() {
@@ -86,40 +90,44 @@ async function displayFirstNews() {
 
   setTheAttributeOfFatherElements(divTitle, divUrl, divData);
 
-  for (start; start < limit; start++) {
-    const response = await fetch(
-      baseURL + `item/${allTheIDOfTheStories[start]}.json`
-    );
-    const data = await response.json();
+  try {
+    for (start; start < limit; start++) {
+      const response = await fetch(
+        baseURL + `item/${allTheIDOfTheStories[start]}.json`
+      );
+      const data = await response.json();
 
-    const title = document.createElement("p");
-    title.innerHTML = data.title;
-    divTitle.appendChild(title);
+      const title = document.createElement("p");
+      title.innerHTML = data.title;
+      divTitle.appendChild(title);
 
-    const subLinkUrl = document.createElement("div");
-    subLinkUrl.setAttribute("class", "sub-url");
+      const subLinkUrl = document.createElement("div");
+      subLinkUrl.setAttribute("class", "sub-url");
 
-    const linkUrl = document.createElement("a");
-    setTheAElement(linkUrl, data);
+      const linkUrl = document.createElement("a");
+      setTheAElement(linkUrl, data);
 
-    subLinkUrl.appendChild(linkUrl);
-    divUrl.appendChild(subLinkUrl);
+      subLinkUrl.appendChild(linkUrl);
+      divUrl.appendChild(subLinkUrl);
 
-    let time = new Date(data.time * 1000);
-    time =
-      time.toDateString() +
-      "//Time :" +
-      time.getHours(time) +
-      ":" +
-      time.getMinutes(time);
-    const timeText = document.createElement("p");
-    timeText.innerHTML = time;
-    divData.appendChild(timeText);
+      let time = new Date(data.time * 1000);
+      time =
+        time.toDateString() +
+        "//Time :" +
+        time.getHours(time) +
+        ":" +
+        time.getMinutes(time);
+      const timeText = document.createElement("p");
+      timeText.innerHTML = time;
+      divData.appendChild(timeText);
+    }
+    document
+      .querySelectorAll("#pages > div")[0]
+      .append(divTitle, divUrl, divData);
+    limit += 5;
+  } catch {
+    displayErrorMessage();
   }
-  document
-    .querySelectorAll("#pages > div")[0]
-    .append(divTitle, divUrl, divData);
-  limit += 5;
 }
 
 btnLoad.addEventListener("click", async function displayOtherNews() {
@@ -171,7 +179,6 @@ btnLoad.addEventListener("click", async function displayOtherNews() {
     newPage.append(divTitle, divUrl, divData);
   }
   wrapperPages.appendChild(newPage);
-  console.log(allTheIDOfTheStories.length);
 
   limit += 5;
 
@@ -191,4 +198,8 @@ async function setTheAElement(a, data) {
   a.setAttribute("href", data.url);
   a.setAttribute("class", "btn-url");
   a.textContent = "Go to page!";
+}
+
+function displayErrorMessage() {
+  document.getElementById("error-page").style.display = "flex";
 }
