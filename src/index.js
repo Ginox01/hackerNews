@@ -1,12 +1,15 @@
 import "./css/style.css";
 import "./css/loader-style.css";
 import { endLoader } from "./js/loader.js";
+import "./css/waiting_page.css"
 
 // START CODE FOR MOVING THE PAGE++++++++++
 let numPage = 0;
 let displayNewsForPage = 5;
 let pageCreateFromTheUser = 0;
 
+const pages = document.getElementById("pages");
+const loadPage = document.getElementById("wrap-load-page")
 const btnPrev = document.getElementById("btn-prev");
 const btnNext = document.getElementById("btn-next");
 const btnLoad = document.getElementById("btn-load");
@@ -80,6 +83,7 @@ async function getTheElementFromAPI() {
     displayFirstNews();
   } catch {
     displayErrorMessage();
+    pages.style.display = "none"
   }
 }
 
@@ -126,6 +130,7 @@ async function displayFirstNews() {
       .append(divTitle, divUrl, divData);
     limit += 5;
   } catch {
+    pages.style.display = "none";
     displayErrorMessage();
   }
 }
@@ -145,45 +150,53 @@ btnLoad.addEventListener("click", async function displayOtherNews() {
   const divData = document.createElement("div");
 
   setTheAttributeOfFatherElements(divTitle, divUrl, divData);
+  inLoadPage()
 
-  for (start; start < limit; start++) {
-    const response = await fetch(
-      baseURL + `item/${allTheIDOfTheStories[start]}.json`
-    );
-    const data = await response.json();
-
-    const title = document.createElement("p");
-    title.innerHTML = data.title;
-    divTitle.appendChild(title);
-
-    const subLinkUrl = document.createElement("div");
-    subLinkUrl.setAttribute("class", "sub-url");
-
-    const linkUrl = document.createElement("a");
-    setTheAElement(linkUrl, data);
-
-    subLinkUrl.appendChild(linkUrl);
-    divUrl.appendChild(subLinkUrl);
-
-    let time = new Date(data.time * 1000);
-    time =
-      time.toDateString() +
-      "//Time :" +
-      time.getHours(time) +
-      ":" +
-      time.getMinutes(time);
-    const timeText = document.createElement("p");
-    timeText.innerHTML = time;
-    divData.appendChild(timeText);
-
-    newPage.append(divTitle, divUrl, divData);
+  try {
+    for (start; start < limit; start++) {
+      const response = await fetch(
+        baseURL + `item/${allTheIDOfTheStories[start]}.json`
+      );
+      const data = await response.json();
+  
+      const title = document.createElement("p");
+      title.innerHTML = data.title;
+      divTitle.appendChild(title);
+  
+      const subLinkUrl = document.createElement("div");
+      subLinkUrl.setAttribute("class", "sub-url");
+  
+      const linkUrl = document.createElement("a");
+      setTheAElement(linkUrl, data);
+  
+      subLinkUrl.appendChild(linkUrl);
+      divUrl.appendChild(subLinkUrl);
+  
+      let time = new Date(data.time * 1000);
+      time =
+        time.toDateString() +
+        "//Time :" +
+        time.getHours(time) +
+        ":" +
+        time.getMinutes(time);
+      const timeText = document.createElement("p");
+      timeText.innerHTML = time;
+      divData.appendChild(timeText);
+  
+      newPage.append(divTitle, divUrl, divData);
+    }
+    wrapperPages.appendChild(newPage);
+  
+    limit += 5;
+  
+    moveThePage(++numPage);
+    displayBtns();
+  }catch {
+    displayErrorMessage();
+    pages.style.display = "none"
   }
-  wrapperPages.appendChild(newPage);
 
-  limit += 5;
-
-  moveThePage(++numPage);
-  displayBtns();
+  
 });
 
 //IT SET THE ATTRIBUTES OF THE FATHER ELEMENTS
@@ -202,4 +215,12 @@ async function setTheAElement(a, data) {
 
 function displayErrorMessage() {
   document.getElementById("error-page").style.display = "flex";
+}
+
+
+function inLoadPage(){
+  loadPage.style.display = "flex"
+  setTimeout(()=>{
+    loadPage.style.display = "none"
+  },1500)
 }
