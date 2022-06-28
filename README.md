@@ -9,7 +9,7 @@ Once you have install Node  you can run the project with the prompt of the comma
 This project starts with the visualization of five stories , you can load other stories with the button `+` , 
 Once you load other stories , you can see the `<<` and `>>` buttons that they allow us to navigate between the pages
 
-You can connected to the app with this following link :  https://start-to-impact-js-advance.firebaseapp.com/
+You can connected to the app with this following link :  https://js-advance.web.app/
 
 
 
